@@ -65,8 +65,10 @@
 					echo "Failed to connect to db." . mysqli_connect_errno();	
 					}
 					//$query = "INSERT INTO user ('userid', 'username', 'password', 'salt') VALUES (NULL, 
-					mysqli_query($con, "INSERT INTO user ('userid','username','pass','salt')
-					VALUES (NULL, '$dbusername', '$dbpassword', '$dbsalt')");
+					mysqli_query($con, "INSERT INTO user (username,password,salt)
+					VALUES ('$dbusername', '$dbpassword', '$dbsalt')");
+					/* mysqli_real_query($con, "INSERT INTO user ('userid','username','pass','salt')
+					VALUES (0, '$dbusername', '$dbpassword', '$dbsalt')"); */
 					mysqli_close($con);
 						
 				}
