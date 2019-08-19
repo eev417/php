@@ -28,13 +28,13 @@
 				$pageNum = 1;
 			}
 
-			if($pageNum > 2 || $pageNum < 1)
+			if($pageNum > 5 || $pageNum < 1)
 			{
 				echo("<strong>Error...this page does not exist!</strong></body></html>");
 				die();
 			}
 
-			echo ("<strong>This is page# $pageNum</strong>");
+			echo ("<strong>Pg. $pageNum</strong>");
 			if($pageNum == 1)
 			{
 		?>
@@ -53,33 +53,52 @@
 		  </label></p>
           <p><input type="submit" name ="submit" value="REGISTER"></p>
         </form>
+		
+		<br>
+		<br>
+		
+		<form method="get" action="">
+
+          <input type="hidden" name="page" value="3">
+		  <input type="hidden" name="signin" value="1">
+          <p><label>Username
+            <input type="text" name="logusername">
+          </label></p>
+          <p><label>Password
+            <input type="text" name="logpassword">
+          </label></p>
+          <p><input type="submit" name ="submit" value="LOGIN"></p>
+        </form>
 		<?php
-			} else { // $pageNum == 2
-			$dbusername = $dbpassword = "";
-				if (isset($_GET["username"]) && isset($_GET["password"])){
-					$dbusername = $_GET["username"];
-					$dbpassword = $_GET["password"];
-					$dbsalt = $_GET["repassword"];
-					$con = mysqli_connect("localhost","root","maria484","users");
-					if (mysqli_connect_errno()){
-					echo "Failed to connect to db." . mysqli_connect_errno();	
-					}
+			} else if($pageNum == 2){ // $pageNum == 2
+			if (isset($_GET['signup'])){
+				$dbusername = $dbpassword = "";
+					if (isset($_GET["username"]) && isset($_GET["password"])){
+						$dbusername = $_GET["username"];
+						$dbpassword = $_GET["password"];
+						$dbsalt = $_GET["repassword"];
+						/* if($password != $dbsalt){
+							die("<br>Passwords must match!</body></html>");
+						} */
+						$con = mysqli_connect("localhost","root","maria484","users");
+						if (mysqli_connect_errno()){
+							echo "Failed to connect to db." . mysqli_connect_errno();	
+						}
 					//$query = "INSERT INTO user ('userid', 'username', 'password', 'salt') VALUES (NULL, 
-					mysqli_query($con, "INSERT INTO user (username,password,salt)
-					VALUES ('$dbusername', '$dbpassword', '$dbsalt')");
+						mysqli_query($con, "INSERT INTO user (username,password,salt)
+						VALUES ('$dbusername', '$dbpassword', '$dbsalt')");
 					/* mysqli_real_query($con, "INSERT INTO user ('userid','username','pass','salt')
 					VALUES (0, '$dbusername', '$dbpassword', '$dbsalt')"); */
-					mysqli_close($con);
+						mysqli_close($con);
 						
-				}
-				else
-				{
-					echo("<p><strong>Error...your info was not received properly...!</strong></p></body></html>");
-					die();
-				}
+					}
+					else{
+						echo("<p><strong>Error...your info was not received properly...!</strong></p></body></html>");
+						die();
+					}
+			}
 		?>
-			<p> This is your username: <?php echo $dbusername; ?>.</p>
-			<p> This is your password: <?php echo $dbpassword; ?>.</p>
+			<p><strong>SUCCESSFUL ACCOUNT CREATION</strong></p>
 
 			<form method="get" action="">				
 				<input type="hidden" name="page" value="1">
@@ -87,7 +106,32 @@
 			</form>
 			
 		<?php
-			}
+					}
+			 else {
+				 if (isset($_GET["logusername"]) && isset($_GET["logpassword"])){
+					 $logusername = $_GET["logusername"];
+					 $logpassword = $_GET["logpassword"];
+					 $con = mysqli_connect("localhost","root","maria484","users");
+					 $checkuser = "SELECT * FROM user WHERE username LIKE \"" . $logusername . "\" AND password LIKE \"" . 
+					 $logpassword . "\" ";
+					 $result = mysqli_query($con, $checkuser);
+					 $numRows = mysqli_num_rows($result);
+					 if ($numRows >= 1){
+						 if($logusername == "Admin" || $logusername == "Administrator"){//pg 4
+							 
+						 }
+						 else{//pg 3
+							 echo ("<p>SUCCESSFUL LOG IN</p>");
+							 
+						 }
+					 }
+					 else{
+						 echo ("<p>Died</p></body></html>");
+						 die();
+					 }
+					 
+				 }
+			 }
 		?>
 
 		<hl><br><br><br>
